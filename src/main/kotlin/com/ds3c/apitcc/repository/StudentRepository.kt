@@ -17,8 +17,6 @@ class StudentRepositoryImpl(
     val entityManager: EntityManager
 ) : StudentCustomRepository {
     override fun findByFilter(field: String, value: Any): List<Student> {
-        val validFields = listOf("id", "name", "rm", "ra", "cpf", "email", "phone")
-        require(field in validFields) { "Invalid field: $field" }
         val jpql = if (value is String) {
             "SELECT s FROM Student s WHERE LOWER(s.$field) LIKE LOWER (CONCAT('%', :value, '%'))"
         } else {

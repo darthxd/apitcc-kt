@@ -16,51 +16,61 @@ class StudentService(
     fun listStudents() : List<Student> {
         return studentRepository.findAll()
     }
+
     fun getStudentById(id: Long) : Student {
         return studentRepository
             .findById(id)
             .orElseThrow { RuntimeException("Erro ao buscar aluno.") }
     }
+
     fun getStudentByFilter(field: String, value: String) : List<Student> {
-        if(field == "id") {
-            return studentRepository.findByFilter(field, value.toLong())
+        val validFields = listOf("name", "rm", "ra", "cpf", "email", "phone", "class")
+        require(field in validFields) { "Invalid field: $field." }
+        if(field == "class") {
+            val schoolclass = schoolClassRepository
+                .findById(value.toLong())
+                .orElseThrow { RuntimeException("Error finding the class with ID $value.") }
+            return studentRepository.findByFilter("schoolclass", schoolclass)
         }
         return studentRepository.findByFilter(field, value)
     }
+
     fun createStudent(dto: StudentDTO) : Student {
         if(dto.schoolclassId == null) {
-            throw RuntimeException("A classe não pode ser nula.")
+            throw RuntimeException("The class cannot be empty.")
         }
         val schoolClass = schoolClassRepository
             .findById(dto.schoolclassId)
-            .orElseThrow { RuntimeException("Classe não encontrada.") }
+            .orElseThrow { RuntimeException("Error finding the class with ID ${dto.schoolclassId}.") }
         val student = studentMapper.toModel(dto)
         student.schoolclass = schoolClass
         return studentRepository.save(student)
     }
+
     fun updateStudent(id: Long, dto: StudentDTO) : Student {
         if(dto.schoolclassId != null) {
             val schoolClass = schoolClassRepository
                 .findById(dto.schoolclassId)
-                .orElseThrow { RuntimeException("Classe não encontrada.") }
+                .orElseThrow { RuntimeException("Error finding the class with ID ${dto.schoolclassId}.") }
             val student = studentRepository
                 .findById(id)
-                .orElseThrow { RuntimeException("Erro ao buscar aluno.") }
+                .orElseThrow { RuntimeException("Error finding the student with ID $id.") }
             studentMapper.updateModelFromDTO(dto, student)
             student.schoolclass = schoolClass
             return studentRepository.save(student)
         }
         val student = studentRepository
             .findById(id)
-            .orElseThrow { RuntimeException("Erro ao buscar aluno.") }
+            .orElseThrow { RuntimeException("Error finding student with ID $id.") }
         studentMapper.updateModelFromDTO(dto, student)
         return studentRepository.save(student)
     }
+
     fun deleteStudent(id: Long) : String {
         val student = studentRepository
             .findById(id)
-            .orElseThrow { RuntimeException("Erro ao buscar aluno.") }
+            .orElseThrow { RuntimeException("Error finding student with ID $id") }
         studentRepository.deleteById(id)
-        return "Aluno ${student.name} deletado com sucesso."
+        return "Student ${student.name} was deleted."
     }
 }
