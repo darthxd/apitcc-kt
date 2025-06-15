@@ -11,30 +11,34 @@ class SchoolClassService(
     val schoolClassRepository: SchoolClassRepository,
     val schoolClassMapper: SchoolClassMapper
     ) {
+    fun listSchoolClasses() : List<SchoolClass> {
+        return schoolClassRepository.findAll()
+    }
+
+    fun getSchoolClass(id: Long) : SchoolClass {
+        return schoolClassRepository
+            .findById(id)
+            .orElseThrow { RuntimeException("Error finding class with ID $id") }
+    }
+
     fun createSchoolClass(dto: SchoolClassDTO) : SchoolClass {
         val schoolClass = schoolClassMapper.toModel(dto)
         return schoolClassRepository.save(schoolClass)
     }
-    fun listSchoolClasses() : List<SchoolClass> {
-        return schoolClassRepository.findAll()
-    }
-    fun getSchoolClass(id: Long) : SchoolClass {
-        return schoolClassRepository
-            .findById(id)
-            .orElseThrow { RuntimeException("Erro ao buscar classe") }
-    }
-    fun deleteSchoolClass(id: Long) : String {
-        val schoolClass = schoolClassRepository
-            .findById(id)
-            .orElseThrow { RuntimeException("Erro ao buscar classe") }
-        schoolClassRepository.deleteById(id)
-        return "Classe ${schoolClass.name} deletada com sucesso."
-    }
+
     fun updateSchoolClass(id: Long, dto: SchoolClassDTO) : SchoolClass {
         val schoolClass = schoolClassRepository
             .findById(id)
-            .orElseThrow { RuntimeException("Erro ao buscar classe") }
+            .orElseThrow { RuntimeException("Error finding class with ID $id") }
         schoolClassMapper.updateModelFromDTO(dto, schoolClass)
         return schoolClassRepository.save(schoolClass)
+    }
+
+    fun deleteSchoolClass(id: Long) : String {
+        schoolClassRepository
+            .findById(id)
+            .orElseThrow { RuntimeException("Error finding class with ID $id") }
+        schoolClassRepository.deleteById(id)
+        return "Class with ID $id was deleted."
     }
 }

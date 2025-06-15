@@ -20,7 +20,7 @@ class StudentService(
     fun getStudentById(id: Long) : Student {
         return studentRepository
             .findById(id)
-            .orElseThrow { RuntimeException("Erro ao buscar aluno.") }
+            .orElseThrow { RuntimeException("Error finding student with ID $id") }
     }
 
     fun getStudentByFilter(field: String, value: String) : List<Student> {
@@ -29,7 +29,7 @@ class StudentService(
         if(field == "class") {
             val schoolclass = schoolClassRepository
                 .findById(value.toLong())
-                .orElseThrow { RuntimeException("Error finding the class with ID $value.") }
+                .orElseThrow { RuntimeException("Error finding class with ID $value.") }
             return studentRepository.findByFilter("schoolclass", schoolclass)
         }
         return studentRepository.findByFilter(field, value)
@@ -41,7 +41,7 @@ class StudentService(
         }
         val schoolClass = schoolClassRepository
             .findById(dto.schoolclassId)
-            .orElseThrow { RuntimeException("Error finding the class with ID ${dto.schoolclassId}.") }
+            .orElseThrow { RuntimeException("Error finding class with ID ${dto.schoolclassId}.") }
         val student = studentMapper.toModel(dto)
         student.schoolclass = schoolClass
         return studentRepository.save(student)
@@ -51,10 +51,10 @@ class StudentService(
         if(dto.schoolclassId != null) {
             val schoolClass = schoolClassRepository
                 .findById(dto.schoolclassId)
-                .orElseThrow { RuntimeException("Error finding the class with ID ${dto.schoolclassId}.") }
+                .orElseThrow { RuntimeException("Error finding class with ID ${dto.schoolclassId}.") }
             val student = studentRepository
                 .findById(id)
-                .orElseThrow { RuntimeException("Error finding the student with ID $id.") }
+                .orElseThrow { RuntimeException("Error finding student with ID $id.") }
             studentMapper.updateModelFromDTO(dto, student)
             student.schoolclass = schoolClass
             return studentRepository.save(student)
@@ -67,10 +67,10 @@ class StudentService(
     }
 
     fun deleteStudent(id: Long) : String {
-        val student = studentRepository
+        studentRepository
             .findById(id)
             .orElseThrow { RuntimeException("Error finding student with ID $id") }
         studentRepository.deleteById(id)
-        return "Student ${student.name} was deleted."
+        return "Student with ID $id was deleted."
     }
 }
