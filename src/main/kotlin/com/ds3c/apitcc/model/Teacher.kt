@@ -16,4 +16,5 @@ data class Teacher(
     var login: String,
     @Column(nullable = false)
     var password: String,
+    val role: String = "TEACHER",
 )

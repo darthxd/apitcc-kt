@@ -36,5 +36,6 @@ data class Student(
     var password: String,
     var biometry: Long?,
     var photo: String?,
-    var inschool: Boolean?
+    var inschool: Boolean?,
+    val role: String = "STUDENT",
 )

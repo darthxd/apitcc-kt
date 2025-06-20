@@ -22,10 +22,12 @@ class StudentController(
     fun listStudents() : List<Student> {
         return studentService.listStudents()
     }
+
     @GetMapping("/{id}")
     fun getStudentById(@PathVariable("id") id: Long) : Student {
         return studentService.getStudentById(id)
     }
+
     @GetMapping("/{field}/{value}")
     fun getStudentByFilter(
         @PathVariable("field") field: String,
@@ -33,10 +35,12 @@ class StudentController(
     ) : List<Student> {
         return studentService.getStudentByFilter(field, value)
     }
+
     @PostMapping
     fun createStudent(@RequestBody @Validated dto: StudentDTO) : Student {
         return studentService.createStudent(dto)
     }
+
     @PutMapping("/{id}")
     fun updateStudent(
         @PathVariable("id") id: Long,
@@ -44,6 +48,7 @@ class StudentController(
     ) : Student {
         return studentService.updateStudent(id, dto)
     }
+
     @DeleteMapping("/{id}")
     fun deleteStudent(@PathVariable("id") id: Long) : String {
         return studentService.deleteStudent(id)

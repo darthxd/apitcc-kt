@@ -16,4 +16,5 @@ data class Admin(
     var login: String,
     @Column(nullable = false)
     var password: String,
+    val role: String = "ADMIN",
 )
