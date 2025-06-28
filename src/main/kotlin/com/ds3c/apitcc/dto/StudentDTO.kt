@@ -1,5 +1,6 @@
 package com.ds3c.apitcc.dto
 
+import com.ds3c.apitcc.enums.RolesEnum
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.NotBlank
 import java.time.LocalDate
@@ -9,7 +10,7 @@ data class StudentDTO(
     val name: String? = null,
     @NotBlank
     @Max(5)
-    val rm: String? = null,
+    val username: String? = null,
     @NotBlank
     @Max(12)
     val ra: String? = null,
@@ -29,5 +30,5 @@ data class StudentDTO(
     val password: String? = null,
     val biometry: Long? = null,
     val photo: String? = null,
-    val inschool: Boolean? = null
+    val inschool: Boolean? = null,
 )

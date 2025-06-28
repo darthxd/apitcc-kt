@@ -1,39 +1,43 @@
 package com.ds3c.apitcc.service
 
-import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.security.Keys
+import com.ds3c.apitcc.repository.AdminRepository
+import com.ds3c.apitcc.repository.StudentRepository
+import com.ds3c.apitcc.repository.TeacherRepository
+import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
-import java.nio.charset.StandardCharsets
-import java.util.Date
-import javax.crypto.SecretKey
 
 @Service
-class AuthService {
-    private val secret = "everythingisgoingaccordingtoplanman"
-    private val key = Keys.hmacShaKeyFor(secret.toByteArray(StandardCharsets.UTF_8))
-    private val expirationMillis = 86400000L
-
-    fun generateToken(login: String) : String {
-        val now = Date()
-        val expiration = Date(now.time + expirationMillis)
-
-        return Jwts.builder()
-            .subject(login)
-            .issuedAt(now)
-            .expiration(expiration)
-            .signWith(key, Jwts.SIG.HS256)
-            .compact()
+class AuthService(
+    val adminRepository: AdminRepository,
+    val studentRepository: StudentRepository,
+    val teacherRepository: TeacherRepository,
+    val jwtService: JwtService
+) {
+    fun adminLogin(username: String, password: String) : String {
+        val admin = adminRepository
+            .findByUsername(username)
+        if(password != admin.password) {
+            throw BadCredentialsException("The password for admin $username is incorrect.")
+        }
+        return jwtService.generateToken(admin)
     }
 
-    fun getLogin(token: String) : String? {
-        return try {
-            val jwt = Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-            jwt.payload.subject
-        } catch (e: Exception) {
-            null
+    fun studentLogin(username: String, password: String) : String {
+        val student = studentRepository
+            .findByUsername(username)
+        if(password != student.password) {
+            throw BadCredentialsException("The password for student $username is incorrect.")
         }
+        return jwtService.generateToken(student)
+    }
+
+    fun teacherLogin(username: String, password: String) : String {
+        val teacher = teacherRepository
+            .findByUsername(username)
+        if(password != teacher.password) {
+            throw BadCredentialsException("The password for teacher $username is incorrect.")
+        }
+        return jwtService.generateToken(teacher)
     }
 }

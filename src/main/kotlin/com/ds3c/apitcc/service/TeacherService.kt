@@ -14,10 +14,14 @@ class TeacherService(
     fun listTeachers() : List<Teacher> {
         return teacherRepository.findAll()
     }
-    fun getTeacher(id: Long) : Teacher {
+    fun getTeacherById(id: Long) : Teacher {
         return teacherRepository
             .findById(id)
             .orElseThrow { RuntimeException("Error finding teacher with ID $id") }
+    }
+    fun getTeacherByUsername(username: String) : Teacher {
+        return teacherRepository
+            .findByUsername(username)
     }
     fun createTeacher(dto: TeacherDTO) : Teacher {
         val teacher = teacherMapper.toModel(dto)

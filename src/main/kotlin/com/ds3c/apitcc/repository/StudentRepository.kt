@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface StudentRepository : JpaRepository<Student, Long>, StudentCustomRepository {}
+interface StudentRepository : JpaRepository<Student, Long>, StudentCustomRepository {
+    fun findByUsername(username: String) : Student
+}
 
 interface StudentCustomRepository {
     fun findByFilter(field: String, value: Any) : List<Student>

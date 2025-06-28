@@ -25,7 +25,7 @@ class TeacherController(
 
     @GetMapping("/{id}")
     fun getTeacher(@PathVariable("id") id: Long) : Teacher {
-        return teacherService.getTeacher(id)
+        return teacherService.getTeacherById(id)
     }
 
     @PostMapping

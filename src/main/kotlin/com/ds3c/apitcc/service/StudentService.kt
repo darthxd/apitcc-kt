@@ -23,6 +23,11 @@ class StudentService(
             .orElseThrow { RuntimeException("Error finding student with ID $id") }
     }
 
+    fun getStudentByUsername(username: String) : Student {
+        return studentRepository
+            .findByUsername(username)
+    }
+
     fun getStudentByFilter(field: String, value: String) : List<Student> {
         val validFields = listOf("name", "rm", "ra", "cpf", "email", "phone", "class")
         require(field in validFields) { "Invalid field: $field." }

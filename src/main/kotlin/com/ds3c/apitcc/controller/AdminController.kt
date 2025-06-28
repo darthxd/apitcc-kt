@@ -25,7 +25,7 @@ class AdminController(
 
     @GetMapping("/{id}")
     fun getAdmin(@PathVariable("id") id: Long) : Admin {
-        return adminService.getAdmin(id)
+        return adminService.getAdminById(id)
     }
 
     @PostMapping

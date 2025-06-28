@@ -14,15 +14,23 @@ class AdminService(
     fun listAdmins() : List<Admin> {
         return adminRepository.findAll()
     }
-    fun getAdmin(id: Long) : Admin {
+
+    fun getAdminById(id: Long) : Admin {
         return adminRepository
             .findById(id)
             .orElseThrow { RuntimeException("Error finding admin with ID $id") }
     }
+
+    fun getAdminByUsername(username: String) : Admin {
+        return adminRepository
+            .findByUsername(username)
+    }
+
     fun createAdmin(dto: AdminDTO) : Admin {
         val admin = adminMapper.toModel(dto)
         return adminRepository.save(admin)
     }
+
     fun updateAdmin(id:Long, dto: AdminDTO) : Admin {
         val admin = adminRepository
             .findById(id)
@@ -30,6 +38,7 @@ class AdminService(
         adminMapper.updateModelFromDTO(dto, admin)
         return adminRepository.save(admin)
     }
+
     fun deleteAdmin(id: Long) : String {
         adminRepository
             .findById(id)

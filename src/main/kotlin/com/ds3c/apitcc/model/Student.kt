@@ -1,7 +1,10 @@
 package com.ds3c.apitcc.model
 
+import com.ds3c.apitcc.enums.RolesEnum
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -17,8 +20,8 @@ data class Student(
     val id: Long,
     @Column(nullable = false)
     var name: String,
-    @Column(nullable = false, unique = true)
-    var rm: String,
+    @Column(name = "rm", nullable = false, unique = true)
+    override var username: String,
     @Column(nullable = false, unique = true)
     var ra: String,
     @Column(nullable = false, unique = true)
@@ -33,9 +36,10 @@ data class Student(
     @Column(nullable = false)
     var birthdate: LocalDate,
     @Column(nullable = false)
-    var password: String,
+    override var password: String,
     var biometry: Long?,
     var photo: String?,
     var inschool: Boolean?,
-    val role: String = "STUDENT",
-)
+    @Enumerated(EnumType.STRING)
+    override val role: RolesEnum = RolesEnum.STUDENT,
+) : User
