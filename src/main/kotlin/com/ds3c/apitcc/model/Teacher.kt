@@ -20,5 +20,5 @@ data class Teacher(
     @Column(nullable = false)
     override var password: String,
     @Enumerated(EnumType.STRING)
-    override val role: RolesEnum = RolesEnum.TEACHER,
+    override var role: RolesEnum = RolesEnum.TEACHER,
 ) : User

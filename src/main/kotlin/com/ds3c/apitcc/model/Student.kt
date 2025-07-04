@@ -41,5 +41,5 @@ data class Student(
     var photo: String?,
     var inschool: Boolean?,
     @Enumerated(EnumType.STRING)
-    override val role: RolesEnum = RolesEnum.STUDENT,
+    override var role: RolesEnum = RolesEnum.STUDENT,
 ) : User
